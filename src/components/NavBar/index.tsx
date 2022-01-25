@@ -29,11 +29,13 @@ import useLocale from '@/utils/useLocale';
 import Logo from '@/assets/logo.svg';
 import MessageBox from '@/components/MessageBox';
 import IconButton from './IconButton';
+import Handler from './Handler';
 import Settings from '../Settings';
 import styles from './style/index.module.less';
 import defaultLocale from '@/locale';
 import useStorage from '@/utils/useStorage';
 import { generatePermission } from '@/routes';
+import classnames from 'classnames';
 
 function Navbar() {
   const t = useLocale();
@@ -134,7 +136,7 @@ function Navbar() {
           <div className={styles['logo-name']}>Arco Pro</div>
         </div>
       </div>
-      <ul className={styles.right}>
+      <ul className={classnames(styles.right, styles['no-drag'])}>
         <li>
           <Input.Search
             className={styles.round}
@@ -191,6 +193,7 @@ function Navbar() {
             </Dropdown>
           </li>
         )}
+        <Handler />
       </ul>
     </div>
   );

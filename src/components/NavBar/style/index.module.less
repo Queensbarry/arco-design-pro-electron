@@ -5,6 +5,8 @@
   box-sizing: border-box;
   background-color: var(--color-bg-2);
   height: 100%;
+
+  -webkit-app-region: drag;
 }
 
 .left {
@@ -63,4 +65,10 @@
   margin-right: 8px;
   font-size: 16px;
   vertical-align: text-bottom;
+}
+
+.no-drag {
+  li {
+    -webkit-app-region: no-drag;
+  }
 }

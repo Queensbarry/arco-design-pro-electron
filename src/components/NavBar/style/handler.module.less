@@ -1,0 +1,28 @@
+.handler-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  color: var(--color-text-1);
+  font-weight: 600;
+  font-size: 18px;
+  width: 100px;
+  margin-left: 20px;
+  -webkit-app-region: no-drag;
+
+  svg {
+    cursor: pointer;
+  }
+
+  :nth-child(1):hover {
+    color: var(--color-fill-4);
+  }
+
+  :nth-child(2):hover {
+    color: var(--color-fill-4);
+  }
+
+  :nth-child(3):hover {
+    color: red;
+  }
+}
