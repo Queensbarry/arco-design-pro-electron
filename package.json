@@ -1,7 +1,7 @@
 {
-  "name": "arco-design-pro",
-  "version": "1.0.0",
-  "description": "Arco Design Pro",
+  "name": "arco-design-pro-electron",
+  "version": "0.1.0",
+  "description": "Arco Design Pro for Electron",
   "main": "background.js",
   "scripts": {
     "start": "react-app-rewired start",
