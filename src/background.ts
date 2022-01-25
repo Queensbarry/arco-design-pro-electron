@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore
 const path = require('path');
 const {readFile} = require('fs');
+// @ts-ignore
 const {URL} = require('url');
 const {app, ipcMain, protocol, BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
@@ -27,19 +30,19 @@ async function createWindow() {
         nodeIntegration: true,
         contextIsolation: true,
         // preload
-        preload: path.join(__dirname, 'preload.js'),
+        preload: path.join(__dirname, 'preload.ts'),
       },
     }
   );
 
   if (isDev) {
     await win.loadURL('http://localhost:3000').then(() => {
-      win.webContents.openDevTools()
+      win.webContents.openDevTools();
     }).catch((e) => {
-      console.error(`Window fail to load: ${e}`)
+      console.error(`Window fail to load: ${e}`);
     });
   } else {
-    createProtocol('app');
+    createProtocol('app', null);
     // Load the index.html when not in development
     await win.loadURL('app://./index.html');
   }
@@ -53,7 +56,7 @@ async function createWindow() {
   })
   ipcMain.on('quit', () => {
     if (process.platform !== 'darwin') {
-      app.quit()
+      app.quit();
     }
   })
 
@@ -64,14 +67,15 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-      app.quit()
+      app.quit();
   }
 })
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  if (BrowserWindow.getAllWindows().length === 0) createWindow().then(() => {});
 })
 
 // This method will be called when Electron has finished
@@ -90,7 +94,7 @@ app.on('ready', async () => {
         },
       });
     } catch (e) {
-      console.error(`Devtools failed to install: ${e}`)
+      console.error(`Devtools failed to install: ${e}`);
     }
   }
   await createWindow();
@@ -101,12 +105,12 @@ if (isDev) {
   if (process.platform === 'win32') {
     process.on('message', (data) => {
       if (data === 'graceful-exit') {
-        app.quit()
+        app.quit();
       }
     })
   } else {
     process.on('SIGTERM', () => {
-      app.quit()
+      app.quit();
     })
   }
 }
@@ -115,36 +119,36 @@ function createProtocol(scheme, customProtocol) {
   (customProtocol || protocol).registerBufferProtocol(
     scheme,
     (request, respond) => {
-      let pathName = new URL(request.url).pathname
+      let pathName = new URL(request.url).pathname;
       // Needed in case URL contains spaces
-      pathName = decodeURI(pathName)
+      pathName = decodeURI(pathName);
 
       readFile(path.join(__dirname, pathName), (error, data) => {
         if (error) {
           console.error(
             `Failed to read ${pathName} on ${scheme} protocol`,
             error
-          )
+          );
         }
-        const extension = path.extname(pathName).toLowerCase()
-        let mimeType = ''
+        const extension = path.extname(pathName).toLowerCase();
+        let mimeType = '';
 
         if (extension === '.js') {
-          mimeType = 'text/javascript'
+          mimeType = 'text/javascript';
         } else if (extension === '.html') {
-          mimeType = 'text/html'
+          mimeType = 'text/html';
         } else if (extension === '.css') {
-          mimeType = 'text/css'
+          mimeType = 'text/css';
         } else if (extension === '.svg' || extension === '.svgz') {
-          mimeType = 'image/svg+xml'
+          mimeType = 'image/svg+xml';
         } else if (extension === '.json') {
-          mimeType = 'application/json'
+          mimeType = 'application/json';
         } else if (extension === '.wasm') {
-          mimeType = 'application/wasm'
+          mimeType = 'application/wasm';
         }
 
-        respond({ mimeType, data })
-      })
+        respond({ mimeType, data });
+      });
     }
   )
 }

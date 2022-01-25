@@ -16,8 +16,8 @@ npm run electron:build
 ```
 
 ## 其他
-* 代码中可直接使用 `window.ipcRenender` 以使用 `electron` 中 `ipcRenender` 的所有功能，`window.ipcRenender` 已经在 `preload.js` 中注入
-* 其他有需要注入的内容请在 `preload.js` 中使用 `contextBridge` 进行注入，以保证上下文安全
+* 代码中可直接使用 `window.ipcRenender` 以使用 `electron` 中 `ipcRenender` 的所有功能，`window.ipcRenender` 已经在 `preload.ts` 中注入
+* 其他有需要注入的内容请在 `preload.ts` 中使用 `contextBridge` 进行注入，以保证上下文安全
 
 ## 相关链接
 * [Arco Design Pro](https://github.com/arco-design/arco-design-pro)
