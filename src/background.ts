@@ -2,17 +2,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
 const path = require('path');
-const {readFile} = require('fs');
-// @ts-ignore
-const {URL} = require('url');
-const {app, ipcMain, protocol, BrowserWindow} = require('electron');
+const {app, ipcMain, BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
 const {default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} = require('electron-devtools-installer');
-
-// Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } }
-]);
 
 async function createWindow() {
   // Create the browser window
@@ -42,9 +34,8 @@ async function createWindow() {
       console.error(`Window fail to load: ${e}`);
     });
   } else {
-    createProtocol('app', null);
     // Load the index.html when not in development
-    await win.loadURL('app://./index.html');
+    await win.loadURL('file://./index.html');
   }
 
   // bind some event
@@ -113,42 +104,4 @@ if (isDev) {
       app.quit();
     })
   }
-}
-
-function createProtocol(scheme, customProtocol) {
-  (customProtocol || protocol).registerBufferProtocol(
-    scheme,
-    (request, respond) => {
-      let pathName = new URL(request.url).pathname;
-      // Needed in case URL contains spaces
-      pathName = decodeURI(pathName);
-
-      readFile(path.join(__dirname, pathName), (error, data) => {
-        if (error) {
-          console.error(
-            `Failed to read ${pathName} on ${scheme} protocol`,
-            error
-          );
-        }
-        const extension = path.extname(pathName).toLowerCase();
-        let mimeType = '';
-
-        if (extension === '.js') {
-          mimeType = 'text/javascript';
-        } else if (extension === '.html') {
-          mimeType = 'text/html';
-        } else if (extension === '.css') {
-          mimeType = 'text/css';
-        } else if (extension === '.svg' || extension === '.svgz') {
-          mimeType = 'image/svg+xml';
-        } else if (extension === '.json') {
-          mimeType = 'application/json';
-        } else if (extension === '.wasm') {
-          mimeType = 'application/wasm';
-        }
-
-        respond({ mimeType, data });
-      });
-    }
-  )
 }
