@@ -2,7 +2,8 @@
   "name": "arco-design-pro-electron",
   "version": "0.1.0",
   "description": "Arco Design Pro for Electron",
-  "main": "src/background.ts",
+  "homepage": "./",
+  "main": "public/electron.js",
   "scripts": {
     "start": "react-app-rewired start",
     "dev": "react-app-rewired start",
@@ -11,7 +12,23 @@
     "eslint": "eslint src/ --ext .ts,.tsx --fix --cache",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --fix --cache",
     "lint": "npm run eslint && npm run stylelint",
-    "electron:serve": "concurrently \"wait-on http://localhost:3000 && electron . \" \"cross-env BROWSER=none npm start\""
+    "electron:serve": "concurrently \"wait-on http://localhost:3000 && electron . \" \"cross-env BROWSER=none npm start\"",
+    "electron:build:win64": "yarn build && electron-builder --x64",
+    "electron:build:win32": "yran build && electron-builder --ia32"
+  },
+  "build": {
+    "appId": "arco.design.pro.electron",
+    "productName": "Arco Design Pro for Electron",
+    "files": ["build/**/*", "node_modules/**/*"],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",
@@ -73,14 +90,10 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "last 1 electron version"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 electron version"
     ]
   },
   "husky": {
