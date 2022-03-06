@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { ConfigProvider } from '@arco-design/web-react';
 import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import rootReducer from './store';
 import PageLayout from './layout';
@@ -47,7 +47,7 @@ function Index() {
     if (checkLogin()) {
       fetchUserInfo();
     } else if (window.location.pathname.replace(/\//g, '') !== 'login') {
-      window.location.pathname = '/login';
+      window.location.hash = '#/login';
     }
   }, []);
 
@@ -63,7 +63,7 @@ function Index() {
   };
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ConfigProvider
         locale={getArcoLocale()}
         componentConfig={{
@@ -87,7 +87,7 @@ function Index() {
           </GlobalContext.Provider>
         </Provider>
       </ConfigProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
