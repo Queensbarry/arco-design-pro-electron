@@ -49,7 +49,7 @@ function Navbar() {
 
   function logout() {
     setUserStatus('logout');
-    window.location.href = '/login';
+    window.location.hash = '#/login';
   }
 
   function onMenuItemClick(key) {

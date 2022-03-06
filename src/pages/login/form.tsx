@@ -36,7 +36,7 @@ export default function LoginForm() {
     // 记录登录状态
     localStorage.setItem('userStatus', 'login');
     // 跳转首页
-    window.location.href = '/';
+    window.location.hash = '#/';
   }
 
   function login(params) {
