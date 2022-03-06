@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
 const path = require('path');
 const {app, ipcMain, BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
@@ -22,21 +21,33 @@ async function createWindow() {
         nodeIntegration: true,
         contextIsolation: true,
         // preload
-        preload: path.join(__dirname, 'preload.ts'),
+        preload: path.join(__dirname, 'preload.js'),
       },
     }
   );
-
   if (isDev) {
-    await win.loadURL('http://localhost:3000').then(() => {
-      win.webContents.openDevTools();
-    }).catch((e) => {
-      console.error(`Window fail to load: ${e}`);
-    });
-  } else {
-    // Load the index.html when not in development
-    await win.loadURL('file://./index.html');
+    // Install React and Redux Devtools
+    try {
+      await installExtension([
+        REACT_DEVELOPER_TOOLS,
+        REDUX_DEVTOOLS,
+      ], {
+        loadExtensionOptions: {
+          allowFileAccess: true,
+        },
+      });
+      win.webContents.openDevTools()
+    } catch (e) {
+      console.error(`Devtools failed to install: ${e}`);
+    }
   }
+
+  await win.loadURL(isDev
+    ? 'http://localhost:3000'
+    : `file://${path.join(__dirname, '../build/index.html')}`
+  ).catch((e) => {
+    console.error(`Window fail to load: ${e}`);
+  });
 
   // bind some event
   ipcMain.on('minimize', () => {
@@ -50,7 +61,6 @@ async function createWindow() {
       app.quit();
     }
   })
-
 }
 
 // Quit when all windows are closed.
@@ -73,21 +83,6 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDev) {
-    // Install React and Redux Devtools
-    try {
-      await installExtension([
-        REACT_DEVELOPER_TOOLS,
-        REDUX_DEVTOOLS,
-      ], {
-        loadExtensionOptions: {
-          allowFileAccess: true,
-        },
-      });
-    } catch (e) {
-      console.error(`Devtools failed to install: ${e}`);
-    }
-  }
   await createWindow();
 });
 
