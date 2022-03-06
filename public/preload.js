@@ -4,3 +4,8 @@
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer)
+
+// expose version in react app
+process.once('loaded', () => {
+  contextBridge.exposeInMainWorld('versions', process.versions)
+})
